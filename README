@@ -1,8 +1,11 @@
-Publish aliases with Avahi
+Publish aliases with Avahi:
+How to route all multiple names to a single host using Multicast-DNS?
+
 Tested the installation on ubuntu-10.04 and 11.10.
 Tested the clients on windows-vista; ubuntu-10.04 ubuntu-11.10; macosx-snow-leopard.
+Original discussions mention that it does not work on windows. I tested it on one machine and it was all smooth. Will confirm.
 
-Requirements on ubuntu:
+Server-side requirements on ubuntu:
 The debian packages
    avahi-daemon python-avahi
 must be installed.
