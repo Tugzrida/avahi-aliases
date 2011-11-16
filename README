@@ -19,3 +19,8 @@ and
 
 The aliases are published by the command:
   sudo avahi-publish-alias
+
+Acknowledgements:
+Original sources from avahi: http://www.avahi.org/wiki/Examples/PythonPublishAlias
+Discussion on stackoverflow: http://stackoverflow.com/questions/775233/how-to-route-all-subdomains-to-a-single-host-using-mdns?answertab=votes#tab-top
+And original github repo: https://github.com/airtonix/avahi-aliases
