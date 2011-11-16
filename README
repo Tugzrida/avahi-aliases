@@ -1,0 +1,21 @@
+Publish aliases with Avahi
+Tested the installation on ubuntu-10.04 and 11.10.
+Tested the clients on windows-vista; ubuntu-10.04 ubuntu-11.10; macosx-snow-leopard.
+
+Requirements on ubuntu:
+The debian packages
+   avahi-daemon python-avahi
+must be installed.
+
+Installation:
+sudo ./install.sh
+
+Usage:
+The file /etc/avahi/aliases contains the list of names that should be aliased to the server: one name per line.
+This list can be manipulated with:
+  sudo avahi-add-alias the.new.alias.local
+and
+  sudo avahi-remove-alias the.new.alias.local
+
+The aliases are published by the command:
+  sudo avahi-publish-alias
