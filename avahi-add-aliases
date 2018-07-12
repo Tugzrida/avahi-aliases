@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+import os, sys
+
+if os.geteuid() != 0:
+    exit("You need to have root privileges to run this script.\nPlease try again using 'sudo'.")
+
+if len(sys.argv) is 1:
+    exit("Usage: avahi-add-alias [-f my_alias_filename] alias_1.local [alias_2.local] [alias_3.local]...")
+
+if sys.argv[1] == "-f":
+    outFile = "/etc/avahi/aliases.d/{}".format(sys.argv[2])
+    toAdd = ["{}\n".format(x) for x in sys.argv[3:]]
+else:
+    outFile = "/etc/avahi/aliases"
+    toAdd = ["{}\n".format(x) for x in sys.argv[1:]]
+
+aliasFiles = [ os.path.join("/etc/avahi/aliases.d/", config_file) for config_file in os.listdir("/etc/avahi/aliases.d/") ]
+aliasFiles[0:0] = ["/etc/avahi/aliases"]
+currentAliases = []
+
+for file in aliasFiles:
+    with open(file, 'r') as fileOpen:
+        currentAliases += fileOpen.readlines()
+
+for alias in toAdd:
+    if alias not in currentAliases:
+        with open(outFile, 'a+') as openFile:
+            openFile.write(alias)
+        print("Added {}".format(alias.rstrip('\n')))
+    else:
+        print("{} is already an alias!".format(alias.rstrip('\n')))
+
+os.system("systemctl restart avahi-aliases.service")
+print("done")

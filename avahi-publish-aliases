@@ -42,10 +42,16 @@ def createRR(name):
     return ''.join(out)
 
 if __name__ == '__main__':
-    import time, sys, locale
-    for each in sys.argv[1:]:
-        name = unicode(each, locale.getpreferredencoding())
-        publish_cname(name)
+    import time, sys, locale, os
+    aliasFiles = [ os.path.join("/etc/avahi/aliases.d/", config_file) for config_file in os.listdir("/etc/avahi/aliases.d/") ]
+    aliasFiles[0:0] = ["/etc/avahi/aliases"]
+
+    for file in aliasFiles:
+        with open(file, 'r') as fileOpen:
+            for alias in [x.rstrip('\n') for x in fileOpen.readlines()]:
+                print("publishing : << {} >>".format(alias))
+                name = unicode(alias, locale.getpreferredencoding())
+                publish_cname(name)
     try:
         # Just loop forever
         while 1: time.sleep(60)

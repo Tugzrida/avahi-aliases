@@ -1,0 +1,11 @@
+[Unit]
+Description=avahi-aliases
+PartOf=avahi-daemon.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/avahi-publish-aliases
+Restart=always
+
+[Install]
+WantedBy=avahi-daemon.service

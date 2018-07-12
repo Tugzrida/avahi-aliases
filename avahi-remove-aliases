@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+import os, sys
+
+if os.geteuid() != 0:
+    exit("You need to have root privileges to run this script.\nPlease try again using 'sudo'.")
+
+if len(sys.argv) is 1:
+    exit("Usage: avahi-remove-alias alias_1.local [alias_2.local] [alias_3.local]...")
+
+toRemove = [x + '\n' for x in sys.argv[1:]]
+
+aliasFiles = [ os.path.join("/etc/avahi/aliases.d/", config_file) for config_file in os.listdir("/etc/avahi/aliases.d/") ]
+aliasFiles[0:0] = ["/etc/avahi/aliases"]
+
+for file in aliasFiles:
+    lines = [line for line in open(file, 'r') if line not in toRemove]
+    if ("aliases.d" in file) and len(lines) == 0:
+        os.remove(file)
+    else:
+        with open(file, 'w') as outfile:
+            outfile.writelines(lines)
+
+os.system("systemctl restart avahi-aliases.service")
+print("done")
