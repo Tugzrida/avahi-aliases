@@ -1,6 +1,6 @@
 [Unit]
 Description=avahi-aliases
-PartOf=avahi-daemon.service
+BindsTo=avahi-daemon.service
 
 [Service]
 Type=simple
