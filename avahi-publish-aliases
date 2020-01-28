@@ -56,4 +56,4 @@ if __name__ == '__main__':
         # Just loop forever
         while 1: time.sleep(60)
     except KeyboardInterrupt:
-        print "Exiting"
+        print("Exiting")
