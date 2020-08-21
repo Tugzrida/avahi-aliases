@@ -52,6 +52,9 @@ if __name__ == "__main__":
         with open(file, "r") as f:
             for alias in [line.rstrip("\n") for line in f if not line.startswith("#")]:
                 print("{}: Publishing".format(alias))
+                if not alias.endswith(".local"):
+                    print("{}: adding .local to unsupported address".format(alias))
+                    alias = "{}.local".format(alias)
                 publish_cname(alias)
     try:
         # Just loop forever
