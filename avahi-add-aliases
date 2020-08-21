@@ -1,34 +1,40 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 import os, sys
+
+exitUsage = lambda:exit("Usage: avahi-add-alias [-f alias_list_name] alias_1.local [alias_2.local] [alias_3.local]...")
 
 if os.geteuid() != 0:
     exit("You need to have root privileges to run this script.\nPlease try again using 'sudo'.")
 
-if len(sys.argv) is 1:
-    exit("Usage: avahi-add-alias [-f my_alias_filename] alias_1.local [alias_2.local] [alias_3.local]...")
+if len(sys.argv) < 2:
+    exitUsage()
 
 if sys.argv[1] == "-f":
-    outFile = "/etc/avahi/aliases.d/{}".format(sys.argv[2])
-    toAdd = ["{}\n".format(x) for x in sys.argv[3:]]
+    if len(sys.argv) < 4:
+        exitUsage()
+    outFile = os.path.join("/etc/avahi/aliases.d/", os.path.basename(sys.argv[2]))
+    toAdd = sys.argv[3:]
 else:
     outFile = "/etc/avahi/aliases"
-    toAdd = ["{}\n".format(x) for x in sys.argv[1:]]
+    toAdd = sys.argv[1:]
 
-aliasFiles = [ os.path.join("/etc/avahi/aliases.d/", config_file) for config_file in os.listdir("/etc/avahi/aliases.d/") ]
-aliasFiles[0:0] = ["/etc/avahi/aliases"]
+aliasFiles = ["/etc/avahi/aliases"] + [ os.path.join("/etc/avahi/aliases.d/", f) for f in os.listdir("/etc/avahi/aliases.d/") ]
 currentAliases = []
 
 for file in aliasFiles:
-    with open(file, 'r') as fileOpen:
-        currentAliases += fileOpen.readlines()
+    with open(file, "r") as f:
+        currentAliases += [line.rstrip("\n") for line in f]
 
 for alias in toAdd:
     if alias not in currentAliases:
-        with open(outFile, 'a+') as openFile:
-            openFile.write(alias)
-        print("Added {}".format(alias.rstrip('\n')))
+        if not alias.startswith("#"):
+            with open(outFile, "a") as f:
+                f.write("{}\n".format(alias))
+            print("{}: Added".format(alias))
+        else:
+            print("{}: Alias cannot start with #".format(alias))
     else:
-        print("{} is already an alias!".format(alias.rstrip('\n')))
+        print("{}: Already an alias".format(alias))
 
 os.system("systemctl restart avahi-aliases.service")
 print("done")

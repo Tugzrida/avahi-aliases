@@ -1,12 +1,11 @@
-#!/usr/bin/env python
-import os, sys
+#!/usr/bin/python3
+import os
 
-aliasFiles = [ os.path.join("/etc/avahi/aliases.d/", config_file) for config_file in os.listdir("/etc/avahi/aliases.d/") ]
-aliasFiles[0:0] = ["/etc/avahi/aliases"]
+aliasFiles = ["/etc/avahi/aliases"] + [ os.path.join("/etc/avahi/aliases.d/", f) for f in os.listdir("/etc/avahi/aliases.d/") ]
 
 for file in aliasFiles:
-    with open(file, 'r') as fileOpen:
+    with open(file, "r") as f:
         print("{} :".format(file))
-        for line in fileOpen:
-            if not line.startswith('#'):
-                print("    {}".format(line.rstrip('\n')))
+        for line in f:
+            if not line.startswith("#"):
+                print("    {}".format(line.rstrip("\n")))
